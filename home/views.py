@@ -37,4 +37,6 @@ class BrandView(BaseView):
 class ProductDetailView(BaseView):
     def get(self,request,slug):
         self.views['product_details'] = Product.objects.filter(slug=slug)
+        ids = Product.objects.get(slug=slug).subcategory_id
+        self.views['related_products'] = Product.objects.filter(subcategory_id=ids)
         return render(request,'product-detail.html',self.views)
