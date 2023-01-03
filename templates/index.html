@@ -10,7 +10,7 @@
                             <ul class="navbar-nav">
                               {% for cat in categories %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#"><i class="{{cat.logo}}"></i>{{cat.name}}</a>
+                                    <a class="nav-link" href="/category/{{cat.slug}}"><i class="{{cat.logo}}"></i>{{cat.name}}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -61,7 +61,7 @@
             <div class="container-fluid">
                 <div class="brand-slider">
                     {% for brand in brands %}
-                    <div class="brand-item"><img src="{{brand.image.url}}" alt=""></div>
+                    <a href = "/brand/{{brand.slug}}"><div class="brand-item"><img src="{{brand.image.url}}" alt=""></div></a>
                     {% endfor %}
                 </div>
             </div>
@@ -192,7 +192,7 @@
                     <div class="col-lg-3">
                         <div class="product-item">
                             <div class="product-title">
-                                <a href="#">{{hot.name}}</a>
+                                <a href="/detail/{{hot.slug}}">{{hot.name}}</a>
                                 <div class="ratting">
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
@@ -202,7 +202,7 @@
                                 </div>
                             </div>
                             <div class="product-image">
-                                <a href="product-detail.html">
+                                <a href="/detail/{{hot.slug}}">
                                     <img src="{{hot.image.url}}" alt="Product Image">
                                 </a>
                                 <div class="product-action">
@@ -256,7 +256,7 @@
                     <div class="col-lg-3">
                         <div class="product-item">
                             <div class="product-title">
-                                <a href="#">{{new.name}}</a>
+                                <a href="/detail/{{new.slug}}">{{new.name}}</a>
                                 <div class="ratting">
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
@@ -266,7 +266,7 @@
                                 </div>
                             </div>
                             <div class="product-image">
-                                <a href="product-detail.html">
+                                <a href="/detail/{{new.slug}}">
                                     <img src="{{new.image.url}}" alt="Product Image">
                                 </a>
                                 <div class="product-action">
