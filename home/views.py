@@ -40,7 +40,17 @@ class ProductDetailView(BaseView):
         self.views['product_details'] = Product.objects.filter(slug=slug)
         ids = Product.objects.get(slug=slug).subcategory_id
         self.views['related_products'] = Product.objects.filter(subcategory_id=ids)
+        self.views['product_reviews'] = ProductReview.objects.filter(slug = slug)
         return render(request,'product-detail.html',self.views)
+
+class SearchView(BaseView):
+    def get(self,request):
+        query = request.GET.get('query')
+        if query != '':
+            self.views['search_product'] = Product.objects.filter(name__icontains = query)
+        else:
+            return redirect('/')
+        return render(request,'search.html',self.views)
 
 def signup(request):
     if request.method == "POST":
@@ -70,6 +80,9 @@ def signup(request):
 def product_review(request,slug):
     username = request.user.username
     email = request.user.email
+    import datetime
+    x = datetime.datetime.now()
+    date = str(x.strftime("%c"))
     if request.method == "POST":
         star = request.POST['star']
         comment = request.POST['comment']
@@ -78,7 +91,39 @@ def product_review(request,slug):
             email = email,
             star = star,
             comment = comment,
-            slug = slug
+            slug = slug,
+            date = date
         )
         data.save()
     return redirect(f'/detail/{slug}')
+
+
+def add_to_cart(request,slug):
+    username = request.user.username
+    if Cart.objects.filter(slug = slug,username = username,checkout = False).exists():
+        price = Product.objects.get(slug = slug).price
+        discounted_price = Product.objects.get(slug=slug).discounted_price
+        quantity = Cart.objects.get(slug = slug,username = username,checkout = False).quantity
+        quantity = quantity+1
+        if discounted_price > 0:
+            total = discounted_price * quantity
+        else:
+            total = price * quantity
+        Cart.objects.filter(slug=slug, username=username, checkout=False).update(quantity =  quantity,total = total)
+        return redirect('/')
+
+    else:
+        price = Product.objects.get(slug=slug).price
+        discounted_price = Product.objects.get(slug=slug).discounted_price
+        if discounted_price > 0:
+            total = discounted_price
+        else:
+            total = price
+        data = Cart.objects.create(
+            username = username,
+            slug = slug,
+            total = total,
+            items = Product.objects.get(slug = slug)
+        )
+        data.save()
+        return redirect('/')
