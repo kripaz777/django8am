@@ -82,3 +82,13 @@ class Cart(models.Model):
     checkout = models.BooleanField(default=False)
     def __str__(self):
         return self.username
+
+class Review(models.Model):
+    name = models.CharField(max_length=300)
+    image = models.ImageField(upload_to='media')
+    post = models.CharField(max_length=300)
+    comment = models.TextField()
+    star = models.IntegerField()
+
+    def __str__(self):
+        return self.name
